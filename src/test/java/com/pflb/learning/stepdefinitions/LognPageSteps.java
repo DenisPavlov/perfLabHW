@@ -51,4 +51,19 @@ public class LognPageSteps {
     public void checkForErrorMsg() {
         Assert.assertTrue(loginPage.isErrorMessageVisible());
     }
+
+    public void quit() {
+
+    }
+
+    @Then("^he should see exit message '(.+)'$")
+    public void checkExitMsg(String msg) {
+        Assert.assertEquals(msg, mainPage.geTextQuitBtn());
+    }
+
+    @And("^exit for this page$")
+    public void exitPage() {
+        mainPage.exitPage();
+    }
+
 }

@@ -8,7 +8,6 @@ public class LoginPage extends AbstractPage {
     private String url;
     //    private static final String url = "http://at.pflb.ru/matrixboard2/";
 
-    // TODO: 17.11.17 сделал конструктор
     public LoginPage(String pageUrl) {
         super();
         this.url = pageUrl;
