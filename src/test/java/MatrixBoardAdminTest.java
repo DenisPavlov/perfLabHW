@@ -62,6 +62,7 @@ public class MatrixBoardAdminTest {
         //проверка функций админинстратора
         WebElement addUserButtom = driver.findElement(By.id("add-person"));
         Assert.assertEquals("Добавить человека", addUserButtom.getText());
+        Assert.assertEquals(true, addUserButtom.isDisplayed());
         addUserButtom.click();
 
 

@@ -1,3 +1,6 @@
+import com.pflb.learning.helpers.DriverManager;
+import com.pflb.learning.pages.LoginPage;
+import com.pflb.learning.pages.MainPage;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,9 +24,10 @@ public class MatrixBoardTest {
     @Before //Аннотация Junit. Говорит, что метод должен запускаться каждый раз после создания экземпляра класса, перед всеми тестами
     public void setUp() {
         //Устанавливаем System Property, чтобы наше приложени смогло найти драйвер
-        System.setProperty("webdriver.gecko.driver", "/home/denis/Рабочий стол/Тестирование/hw/soft/geckodriver");
+//        System.setProperty("webdriver.gecko.driver", "/home/denis/Рабочий стол/Тестирование/hw/soft/geckodriver");
         //Инициализируем драйвер
-        driver = new FirefoxDriver();
+        driver = DriverManager.getDriver();
+//        driver = new FirefoxDriver();
         //Инициализируем Implicit Wait
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         //инициализируем Explicit Wait
@@ -35,26 +39,49 @@ public class MatrixBoardTest {
         driver.quit();
     }
 
-    @Test //Аннотация Junit. Говорит, что этот метод - тестовый
-    public void loginTest(){
-        driver.navigate().to("http://at.pflb.ru/matrixboard2/"); //перейти по URL
-        //Найдем и сохраним элементы
-        WebElement loginField = driver.findElement(By.id("login-username"));
-        WebElement passwordField = driver.findElement(By.id("login-password"));
-        WebElement submitBtn = driver.findElement(By.id("login-button"));
+//    @Test //Аннотация Junit. Говорит, что этот метод - тестовый
+//    public void loginTest(){
+//        driver.navigate().to("http://at.pflb.ru/matrixboard2/"); //перейти по URL
+//        //Найдем и сохраним элементы
+//        WebElement loginField = driver.findElement(By.id("login-username"));
+//        WebElement passwordField = driver.findElement(By.id("login-password"));
+//        WebElement submitBtn = driver.findElement(By.id("login-button"));
+//
+//        //Заполним поля текстом
+//        loginField.sendKeys(USER_NAME);
+//        passwordField.sendKeys(PASSWORD);
+//
+//        //отправим форму
+//        submitBtn.click();
+//
+//        //В данной ситуации не нужны. Добавлены в качестве примера использования
+//        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#profile span"))); //подождать пока элемент появиться на странице
+//        wait.until((d) -> {return d.findElement(By.cssSelector("#profile span")).isDisplayed();}); //пример собственной реализации ExpectedCondition. Ждем пока выражение внутри лямбды не вернет нам true (но не больше таймаута)
+//
+//        WebElement usernameContainer = driver.findElement(By.cssSelector("#profile span")); //найдем элемент
+//        Assert.assertEquals(USER_NAME, usernameContainer.getText()); //проверим, что текст в найденном элементе совпадает с ожидаемым.
+//    }
 
-        //Заполним поля текстом
-        loginField.sendKeys(USER_NAME);
-        passwordField.sendKeys(PASSWORD);
+    @Test
+    public void negativeLoginTest(){
+        LoginPage loginPage = new LoginPage("http://at.pflb.ru/matrixboard2/"); //создаем экземпляр LoginPage
 
-        //отправим форму
-        submitBtn.click();
+        //остальные шаги просто комбинируем в цепочку
+        loginPage.fillLoginField("user")
+                .fillPasswordField("asd")
+                .submit();
+        //Assert.assertTrue(loginPage.isErrorMessageVisible());
+        Assert.assertTrue("Error message invisible!!!111", loginPage.isErrorMessageVisible());
+    }
 
-        //В данной ситуации не нужны. Добавлены в качестве примера использования
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#profile span"))); //подождать пока элемент появиться на странице
-        wait.until((d) -> {return d.findElement(By.cssSelector("#profile span")).isDisplayed();}); //пример собственной реализации ExpectedCondition. Ждем пока выражение внутри лямбды не вернет нам true (но не больше таймаута)
+    @Test
+    public void successLoginTest(){
+        LoginPage loginPage = new LoginPage("http://at.pflb.ru/matrixboard2/");
+        loginPage.fillLoginField("user")
+                .fillPasswordField("user")
+                .submit();
 
-        WebElement usernameContainer = driver.findElement(By.cssSelector("#profile span")); //найдем элемент
-        Assert.assertEquals(USER_NAME, usernameContainer.getText()); //проверим, что текст в найденном элементе совпадает с ожидаемым.
+        MainPage mainPage = new MainPage();
+        Assert.assertEquals("user", mainPage.getUsername());
     }
 }
