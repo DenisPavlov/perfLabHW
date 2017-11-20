@@ -13,7 +13,7 @@ public class LognPageSteps {
     private MainPage mainPage;
 
     //Статический блок инициализации
-//    static {System.setProperty("webdriver.gecko.driver", "C:\\projects\\geckodriver.exe");}
+    static {System.setProperty("webdriver.gecko.driver", "C:\\projects\\geckodriver.exe");}
 
     //Помечаем метод аннотацией и передаем в нее регулярку. Все что регулярка "вытащит" между скобок будет
     // передано вкаестве строкового аргумента
@@ -52,18 +52,6 @@ public class LognPageSteps {
         Assert.assertTrue(loginPage.isErrorMessageVisible());
     }
 
-    public void quit() {
-
-    }
-
-    @Then("^he should see exit message '(.+)'$")
-    public void checkExitMsg(String msg) {
-        Assert.assertEquals(msg, mainPage.geTextQuitBtn());
-    }
-
-    @And("^exit for this page$")
-    public void exitPage() {
-        mainPage.exitPage();
-    }
-
+    @And("^user logging out$")
+    public void logout() {mainPage.exitPage();}
 }
